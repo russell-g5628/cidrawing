@@ -7,7 +7,7 @@ import com.mocircle.cidrawing.board.ElementManager;
 import com.mocircle.cidrawing.element.DrawElement;
 import com.mocircle.cidrawing.element.behavior.ResizingDirection;
 import com.mocircle.cidrawing.mode.selection.RectSelectionMode;
-import com.mocircle.cidrawing.mode.selection.SelectionMode;
+import com.mocircle.cidrawing.mode.selection.parent.SelectionMode;
 import com.mocircle.cidrawing.mode.transformation.MoveMode;
 import com.mocircle.cidrawing.mode.transformation.MoveReferencePointMode;
 import com.mocircle.cidrawing.mode.transformation.ResizeMode;

@@ -76,7 +76,7 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String TAG = "MainActivity";
+    private static final String TAG = MainActivity.class.getName();
 
     private CiDrawingView drawingView;
     private DrawerLayout drawer;
@@ -138,16 +138,17 @@ public class MainActivity extends AppCompatActivity {
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setScrimColor(Color.TRANSPARENT);
-        drawer.setDrawerListener(toggle);
+        drawer.addDrawerListener(toggle);
         toggle.syncState();
     }
 
     private void setupDrawingBoard() {
         drawingView = (CiDrawingView) findViewById(R.id.drawing_view);
+
         drawingBoard.setupDrawingView(drawingView);
         drawingBoard.getDrawingContext().getPaint().setColor(Color.BLACK);
         drawingBoard.getDrawingContext().getPaint().setStrokeWidth(6);
-        drawingBoard.getDrawingContext().setDrawingMode(new PointerMode());
+        drawingBoard.getDrawingContext().setDrawingMode(new SmoothStrokeMode());
 
         layerAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
@@ -155,10 +156,12 @@ public class MainActivity extends AppCompatActivity {
                 drawingBoard.getDrawingView().notifyViewUpdated();
             }
         });
+
         layerAdapter.setOnItemClick((view, layer) -> {
             drawingBoard.getElementManager().selectLayer(layer);
             layerAdapter.notifyDataSetChanged();
         });
+
         drawingBoard.getElementManager().addLayerChangeListener(() -> layerAdapter.setLayers(Arrays.asList(drawingBoard.getElementManager().getLayers())));
     }
 
@@ -268,41 +271,38 @@ public class MainActivity extends AppCompatActivity {
     public void insertShape(View v) {
         PopupMenu popup = new PopupMenu(this, v);
         popup.getMenuInflater().inflate(R.menu.menu_insert_shape, popup.getMenu());
-        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                InsertShapeMode mode = new InsertShapeMode();
-                drawingBoard.getDrawingContext().setDrawingMode(mode);
-                switch (item.getItemId()) {
-                    case R.id.line_menu:
-                        mode.setShapeType(LineElement.class);
-                        break;
-                    case R.id.arc_menu:
-                        mode.setShapeType(ArcElement.class);
-                        break;
-                    case R.id.rect_menu:
-                        mode.setShapeType(RectElement.class);
-                        break;
-                    case R.id.squre_menu:
-                        mode.setShapeType(SquareElement.class);
-                        break;
-                    case R.id.oval_menu:
-                        mode.setShapeType(OvalElement.class);
-                        break;
-                    case R.id.circle_menu:
-                        mode.setShapeType(CircleElement.class);
-                        break;
-                    case R.id.isosceles_triangle_menu:
-                        mode.setShapeType(IsoscelesTriangleElement.class);
-                        break;
-                    case R.id.right_triangle_menu:
-                        RightTriangleElement shape = new RightTriangleElement();
-                        shape.setLeftRightAngle(true);
-                        mode.setShapeInstance(shape);
-                        break;
-                }
-                return true;
+        popup.setOnMenuItemClickListener(item -> {
+            InsertShapeMode mode = new InsertShapeMode();
+            drawingBoard.getDrawingContext().setDrawingMode(mode);
+            switch (item.getItemId()) {
+                case R.id.line_menu:
+                    mode.setShapeType(LineElement.class);
+                    break;
+                case R.id.arc_menu:
+                    mode.setShapeType(ArcElement.class);
+                    break;
+                case R.id.rect_menu:
+                    mode.setShapeType(RectElement.class);
+                    break;
+                case R.id.squre_menu:
+                    mode.setShapeType(SquareElement.class);
+                    break;
+                case R.id.oval_menu:
+                    mode.setShapeType(OvalElement.class);
+                    break;
+                case R.id.circle_menu:
+                    mode.setShapeType(CircleElement.class);
+                    break;
+                case R.id.isosceles_triangle_menu:
+                    mode.setShapeType(IsoscelesTriangleElement.class);
+                    break;
+                case R.id.right_triangle_menu:
+                    RightTriangleElement shape = new RightTriangleElement();
+                    shape.setLeftRightAngle(true);
+                    mode.setShapeInstance(shape);
+                    break;
             }
+            return true;
         });
         popup.show();
     }
@@ -434,22 +434,19 @@ public class MainActivity extends AppCompatActivity {
     public void changeColor(View v) {
         PopupMenu popup = new PopupMenu(this, v);
         popup.getMenuInflater().inflate(R.menu.menu_color, popup.getMenu());
-        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.black_menu:
-                        drawingBoard.getDrawingContext().getPaint().setColor(Color.BLACK);
-                        break;
-                    case R.id.blue_menu:
-                        drawingBoard.getDrawingContext().getPaint().setColor(Color.BLUE);
-                        break;
-                    case R.id.red_menu:
-                        drawingBoard.getDrawingContext().getPaint().setColor(Color.RED);
-                        break;
-                }
-                return true;
+        popup.setOnMenuItemClickListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.black_menu:
+                    drawingBoard.getDrawingContext().getPaint().setColor(Color.BLACK);
+                    break;
+                case R.id.blue_menu:
+                    drawingBoard.getDrawingContext().getPaint().setColor(Color.BLUE);
+                    break;
+                case R.id.red_menu:
+                    drawingBoard.getDrawingContext().getPaint().setColor(Color.RED);
+                    break;
             }
+            return true;
         });
         popup.show();
     }
@@ -457,25 +454,22 @@ public class MainActivity extends AppCompatActivity {
     public void changeColor2(View v) {
         PopupMenu popup = new PopupMenu(this, v);
         popup.getMenuInflater().inflate(R.menu.menu_color2, popup.getMenu());
-        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.nocolor_menu:
-                        drawingBoard.getDrawingContext().getPaint().setSecondaryColor(null);
-                        break;
-                    case R.id.black_menu:
-                        drawingBoard.getDrawingContext().getPaint().setSecondaryColor(Color.BLACK);
-                        break;
-                    case R.id.blue_menu:
-                        drawingBoard.getDrawingContext().getPaint().setSecondaryColor(Color.BLUE);
-                        break;
-                    case R.id.red_menu:
-                        drawingBoard.getDrawingContext().getPaint().setSecondaryColor(Color.RED);
-                        break;
-                }
-                return true;
+        popup.setOnMenuItemClickListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.nocolor_menu:
+                    drawingBoard.getDrawingContext().getPaint().setSecondaryColor(null);
+                    break;
+                case R.id.black_menu:
+                    drawingBoard.getDrawingContext().getPaint().setSecondaryColor(Color.BLACK);
+                    break;
+                case R.id.blue_menu:
+                    drawingBoard.getDrawingContext().getPaint().setSecondaryColor(Color.BLUE);
+                    break;
+                case R.id.red_menu:
+                    drawingBoard.getDrawingContext().getPaint().setSecondaryColor(Color.RED);
+                    break;
             }
+            return true;
         });
         popup.show();
     }
@@ -483,22 +477,19 @@ public class MainActivity extends AppCompatActivity {
     public void changeWidth(View v) {
         PopupMenu popup = new PopupMenu(this, v);
         popup.getMenuInflater().inflate(R.menu.menu_width, popup.getMenu());
-        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.large_menu:
-                        drawingBoard.getDrawingContext().getPaint().setStrokeWidth(10);
-                        break;
-                    case R.id.normal_menu:
-                        drawingBoard.getDrawingContext().getPaint().setStrokeWidth(6);
-                        break;
-                    case R.id.small_menu:
-                        drawingBoard.getDrawingContext().getPaint().setStrokeWidth(2);
-                        break;
-                }
-                return true;
+        popup.setOnMenuItemClickListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.large_menu:
+                    drawingBoard.getDrawingContext().getPaint().setStrokeWidth(10);
+                    break;
+                case R.id.normal_menu:
+                    drawingBoard.getDrawingContext().getPaint().setStrokeWidth(6);
+                    break;
+                case R.id.small_menu:
+                    drawingBoard.getDrawingContext().getPaint().setStrokeWidth(2);
+                    break;
             }
+            return true;
         });
         popup.show();
     }
@@ -506,22 +497,19 @@ public class MainActivity extends AppCompatActivity {
     public void changeStyle(View v) {
         PopupMenu popup = new PopupMenu(this, v);
         popup.getMenuInflater().inflate(R.menu.menu_style, popup.getMenu());
-        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.stroke_menu:
-                        drawingBoard.getDrawingContext().getPaint().setStyle(Paint.Style.STROKE);
-                        break;
-                    case R.id.fill_menu:
-                        drawingBoard.getDrawingContext().getPaint().setStyle(Paint.Style.FILL);
-                        break;
-                    case R.id.fill_stroke_menu:
-                        drawingBoard.getDrawingContext().getPaint().setStyle(Paint.Style.FILL_AND_STROKE);
-                        break;
-                }
-                return true;
+        popup.setOnMenuItemClickListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.stroke_menu:
+                    drawingBoard.getDrawingContext().getPaint().setStyle(Paint.Style.STROKE);
+                    break;
+                case R.id.fill_menu:
+                    drawingBoard.getDrawingContext().getPaint().setStyle(Paint.Style.FILL);
+                    break;
+                case R.id.fill_stroke_menu:
+                    drawingBoard.getDrawingContext().getPaint().setStyle(Paint.Style.FILL_AND_STROKE);
+                    break;
             }
+            return true;
         });
         popup.show();
     }
@@ -537,38 +525,35 @@ public class MainActivity extends AppCompatActivity {
     public void arrange(View v) {
         PopupMenu popup = new PopupMenu(this, v);
         popup.getMenuInflater().inflate(R.menu.menu_arrange, popup.getMenu());
-        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                if (item.getItemId() == R.id.get_order_menu) {
-                    DrawElement element = drawingBoard.getElementManager().getSelection().getSingleElement();
-                    if (element != null) {
-                        int index = drawingBoard.getElementManager().getCurrentLayer().getElementOrder(element);
-                        Toast.makeText(MainActivity.this, "Element order = " + index, Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(MainActivity.this, "You should select one element", Toast.LENGTH_SHORT).show();
-                    }
-                    return true;
+        popup.setOnMenuItemClickListener(item -> {
+            if (item.getItemId() == R.id.get_order_menu) {
+                DrawElement element = drawingBoard.getElementManager().getSelection().getSingleElement();
+                if (element != null) {
+                    int index = drawingBoard.getElementManager().getCurrentLayer().getElementOrder(element);
+                    Toast.makeText(MainActivity.this, "Element order = " + index, Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(MainActivity.this, "You should select one element", Toast.LENGTH_SHORT).show();
                 }
-
-                ArrangeOperation operation = new ArrangeOperation();
-                switch (item.getItemId()) {
-                    case R.id.bring_forward_menu:
-                        operation.setArrangeType(ArrangeOperation.ArrangeType.BringForward);
-                        break;
-                    case R.id.bring_front_menu:
-                        operation.setArrangeType(ArrangeOperation.ArrangeType.BringToFront);
-                        break;
-                    case R.id.send_backward_menu:
-                        operation.setArrangeType(ArrangeOperation.ArrangeType.SendBackward);
-                        break;
-                    case R.id.send_back_menu:
-                        operation.setArrangeType(ArrangeOperation.ArrangeType.SendToBack);
-                        break;
-                }
-                drawingBoard.getOperationManager().executeOperation(operation);
                 return true;
             }
+
+            ArrangeOperation operation = new ArrangeOperation();
+            switch (item.getItemId()) {
+                case R.id.bring_forward_menu:
+                    operation.setArrangeType(ArrangeOperation.ArrangeType.BringForward);
+                    break;
+                case R.id.bring_front_menu:
+                    operation.setArrangeType(ArrangeOperation.ArrangeType.BringToFront);
+                    break;
+                case R.id.send_backward_menu:
+                    operation.setArrangeType(ArrangeOperation.ArrangeType.SendBackward);
+                    break;
+                case R.id.send_back_menu:
+                    operation.setArrangeType(ArrangeOperation.ArrangeType.SendToBack);
+                    break;
+            }
+            drawingBoard.getOperationManager().executeOperation(operation);
+            return true;
         });
         popup.show();
     }

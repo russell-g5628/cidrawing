@@ -1,4 +1,4 @@
-package com.mocircle.cidrawing.mode.selection;
+package com.mocircle.cidrawing.mode.selection.parent;
 
 import android.graphics.Path;
 import android.view.MotionEvent;

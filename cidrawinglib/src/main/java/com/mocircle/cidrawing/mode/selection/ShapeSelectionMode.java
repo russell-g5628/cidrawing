@@ -5,6 +5,7 @@ import android.view.MotionEvent;
 
 import com.mocircle.cidrawing.core.Vector2;
 import com.mocircle.cidrawing.element.shape.ShapeElement;
+import com.mocircle.cidrawing.mode.selection.parent.SelectionMode;
 
 public abstract class ShapeSelectionMode extends SelectionMode {
 

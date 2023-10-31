@@ -1,4 +1,4 @@
-package com.mocircle.cidrawing.mode.stroke;
+package com.mocircle.cidrawing.mode.stroke.parent;
 
 import com.mocircle.cidrawing.DrawingContext;
 import com.mocircle.cidrawing.board.ElementManager;
