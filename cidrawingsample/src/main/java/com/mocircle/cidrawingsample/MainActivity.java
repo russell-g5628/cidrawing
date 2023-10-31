@@ -6,22 +6,21 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.annotation.RequiresApi;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.PopupMenu;
 import android.widget.Toast;
+
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.mocircle.cidrawing.ConfigManager;
 import com.mocircle.cidrawing.DrawingBoard;
@@ -380,28 +379,24 @@ public class MainActivity extends AppCompatActivity {
         drawingBoard.getOperationManager().executeOperation(new UngroupElementOperation());
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void pathUnion(View v) {
         PathOperation operation = new PathOperation();
         operation.setPathOp(Path.Op.UNION);
         drawingBoard.getOperationManager().executeOperation(operation);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void pathIntersect(View v) {
         PathOperation operation = new PathOperation();
         operation.setPathOp(Path.Op.INTERSECT);
         drawingBoard.getOperationManager().executeOperation(operation);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void pathDifferent(View v) {
         PathOperation operation = new PathOperation();
         operation.setPathOp(Path.Op.DIFFERENCE);
         drawingBoard.getOperationManager().executeOperation(operation);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void pathXor(View v) {
         PathOperation operation = new PathOperation();
         operation.setPathOp(Path.Op.XOR);
