@@ -25,8 +25,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.mocircle.cidrawing.ConfigManager;
 import com.mocircle.cidrawing.DrawingBoard;
 import com.mocircle.cidrawing.DrawingBoardManager;
-import com.mocircle.cidrawing.board.Layer;
-import com.mocircle.cidrawing.board.LayerManager;
 import com.mocircle.cidrawing.element.DrawElement;
 import com.mocircle.cidrawing.element.PhotoElement;
 import com.mocircle.cidrawing.element.TextElement;
@@ -157,19 +155,11 @@ public class MainActivity extends AppCompatActivity {
                 drawingBoard.getDrawingView().notifyViewUpdated();
             }
         });
-        layerAdapter.setOnItemClick(new LayerAdapter.OnRecyclerViewItemClickListener() {
-            @Override
-            public void onItemClick(View view, Layer layer) {
-                drawingBoard.getElementManager().selectLayer(layer);
-                layerAdapter.notifyDataSetChanged();
-            }
+        layerAdapter.setOnItemClick((view, layer) -> {
+            drawingBoard.getElementManager().selectLayer(layer);
+            layerAdapter.notifyDataSetChanged();
         });
-        drawingBoard.getElementManager().addLayerChangeListener(new LayerManager.LayerChangeListener() {
-            @Override
-            public void onLayerChanged() {
-                layerAdapter.setLayers(Arrays.asList(drawingBoard.getElementManager().getLayers()));
-            }
-        });
+        drawingBoard.getElementManager().addLayerChangeListener(() -> layerAdapter.setLayers(Arrays.asList(drawingBoard.getElementManager().getLayers())));
     }
 
     private void setupLayerView() {
@@ -189,24 +179,21 @@ public class MainActivity extends AppCompatActivity {
     public void select(View v) {
         PopupMenu popup = new PopupMenu(this, v);
         popup.getMenuInflater().inflate(R.menu.menu_select, popup.getMenu());
-        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                PointerMode mode = new PointerMode();
-                switch (item.getItemId()) {
-                    case R.id.rect_select_menu:
-                        mode.setSelectionMode(new RectSelectionMode());
-                        break;
-                    case R.id.oval_select_menu:
-                        mode.setSelectionMode(new OvalSelectionMode());
-                        break;
-                    case R.id.lasso_menu:
-                        mode.setSelectionMode(new LassoSelectionMode());
-                        break;
-                }
-                drawingBoard.getDrawingContext().setDrawingMode(mode);
-                return true;
+        popup.setOnMenuItemClickListener(item -> {
+            PointerMode mode = new PointerMode();
+            switch (item.getItemId()) {
+                case R.id.rect_select_menu:
+                    mode.setSelectionMode(new RectSelectionMode());
+                    break;
+                case R.id.oval_select_menu:
+                    mode.setSelectionMode(new OvalSelectionMode());
+                    break;
+                case R.id.lasso_menu:
+                    mode.setSelectionMode(new LassoSelectionMode());
+                    break;
             }
+            drawingBoard.getDrawingContext().setDrawingMode(mode);
+            return true;
         });
         popup.show();
     }
@@ -214,27 +201,24 @@ public class MainActivity extends AppCompatActivity {
     public void transform(View v) {
         PopupMenu popup = new PopupMenu(this, v);
         popup.getMenuInflater().inflate(R.menu.menu_transform, popup.getMenu());
-        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                DrawingMode mode = null;
-                switch (item.getItemId()) {
-                    case R.id.move_menu:
-                        mode = new MoveMode(true);
-                        break;
-                    case R.id.rotate_menu:
-                        mode = new RotateMode(true);
-                        break;
-                    case R.id.resize_menu:
-                        mode = new ResizeMode(true);
-                        break;
-                    case R.id.skew_menu:
-                        mode = new SkewMode(true);
-                        break;
-                }
-                drawingBoard.getDrawingContext().setDrawingMode(mode);
-                return true;
+        popup.setOnMenuItemClickListener(item -> {
+            DrawingMode mode = null;
+            switch (item.getItemId()) {
+                case R.id.move_menu:
+                    mode = new MoveMode(true);
+                    break;
+                case R.id.rotate_menu:
+                    mode = new RotateMode(true);
+                    break;
+                case R.id.resize_menu:
+                    mode = new ResizeMode(true);
+                    break;
+                case R.id.skew_menu:
+                    mode = new SkewMode(true);
+                    break;
             }
+            drawingBoard.getDrawingContext().setDrawingMode(mode);
+            return true;
         });
         popup.show();
     }
@@ -242,18 +226,15 @@ public class MainActivity extends AppCompatActivity {
     public void eraser(View v) {
         PopupMenu popup = new PopupMenu(this, v);
         popup.getMenuInflater().inflate(R.menu.menu_eraser, popup.getMenu());
-        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                DrawingMode mode = null;
-                switch (item.getItemId()) {
-                    case R.id.object_eraser_menu:
-                        mode = new ObjectEraserMode();
-                        break;
-                }
-                drawingBoard.getDrawingContext().setDrawingMode(mode);
-                return true;
+        popup.setOnMenuItemClickListener(item -> {
+            DrawingMode mode = null;
+            switch (item.getItemId()) {
+                case R.id.object_eraser_menu:
+                    mode = new ObjectEraserMode();
+                    break;
             }
+            drawingBoard.getDrawingContext().setDrawingMode(mode);
+            return true;
         });
         popup.show();
     }
@@ -263,26 +244,23 @@ public class MainActivity extends AppCompatActivity {
     public void stroke(View v) {
         PopupMenu popup = new PopupMenu(this, v);
         popup.getMenuInflater().inflate(R.menu.menu_stroke, popup.getMenu());
-        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                DrawingMode mode = null;
-                switch (item.getItemId()) {
-                    case R.id.plain_stroke_menu:
-                        mode = new PlainStrokeMode();
-                        break;
-                    case R.id.smooth_stroke_menu:
-                        mode = new SmoothStrokeMode();
-                        break;
-                    case R.id.eraser_stroke_menu:
-                        mode = new EraserStrokeMode();
-                        break;
-                }
-                if (mode != null) {
-                    drawingBoard.getDrawingContext().setDrawingMode(mode);
-                }
-                return true;
+        popup.setOnMenuItemClickListener(item -> {
+            DrawingMode mode = null;
+            switch (item.getItemId()) {
+                case R.id.plain_stroke_menu:
+                    mode = new PlainStrokeMode();
+                    break;
+                case R.id.smooth_stroke_menu:
+                    mode = new SmoothStrokeMode();
+                    break;
+                case R.id.eraser_stroke_menu:
+                    mode = new EraserStrokeMode();
+                    break;
             }
+            if (mode != null) {
+                drawingBoard.getDrawingContext().setDrawingMode(mode);
+            }
+            return true;
         });
         popup.show();
     }
