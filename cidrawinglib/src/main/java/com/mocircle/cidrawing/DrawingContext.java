@@ -10,7 +10,7 @@ import java.util.List;
 
 public class DrawingContext {
 
-    interface DrawingModeChangedListener {
+    public interface DrawingModeChangedListener {
 
         void onDrawingModeChanged();
     }

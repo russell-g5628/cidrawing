@@ -1,9 +1,16 @@
-package com.mocircle.cidrawing;
+package com.mocircle.cidrawing.impl;
 
+import com.mocircle.cidrawing.ConfigManager;
+import com.mocircle.cidrawing.ConfigManagerImpl;
+import com.mocircle.cidrawing.DefaultPaintBuilder;
+import com.mocircle.cidrawing.DefaultPaintingBehavior;
+import com.mocircle.cidrawing.DrawingBoard;
+import com.mocircle.cidrawing.DrawingContext;
+import com.mocircle.cidrawing.PaintBuilder;
+import com.mocircle.cidrawing.PaintingBehavior;
 import com.mocircle.cidrawing.board.ElementManager;
-import com.mocircle.cidrawing.board.ElementManagerImpl;
 import com.mocircle.cidrawing.board.Layer;
-import com.mocircle.cidrawing.element.DrawElement;
+import com.mocircle.cidrawing.board.impl.ElementManagerImpl;
 import com.mocircle.cidrawing.operation.OperationManager;
 import com.mocircle.cidrawing.operation.OperationManagerImpl;
 import com.mocircle.cidrawing.persistence.ExportData;
@@ -40,7 +47,7 @@ public class DrawingBoardImpl implements DrawingBoard {
     private PaintBuilder paintBuilder;
     private PaintingBehavior paintingBehavior;
 
-    DrawingBoardImpl(String boardId) {
+    public DrawingBoardImpl(String boardId) {
         this.boardId = boardId;
         context = new DrawingContext(boardId);
         context.addDrawingModeChangedListener(new DrawingContext.DrawingModeChangedListener() {

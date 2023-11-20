@@ -2,6 +2,8 @@ package com.mocircle.cidrawing;
 
 import android.text.TextUtils;
 
+import com.mocircle.cidrawing.impl.DrawingBoardImpl;
+
 import org.json.JSONObject;
 
 import java.util.HashMap;

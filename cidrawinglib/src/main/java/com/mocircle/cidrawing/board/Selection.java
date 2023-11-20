@@ -13,7 +13,7 @@ public class Selection {
 
     private DrawElement element;
 
-    Selection(DrawElement element) {
+    public Selection(DrawElement element) {
         this.element = element;
     }
 

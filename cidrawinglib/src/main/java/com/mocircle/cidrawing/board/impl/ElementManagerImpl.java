@@ -1,5 +1,8 @@
-package com.mocircle.cidrawing.board;
+package com.mocircle.cidrawing.board.impl;
 
+import com.mocircle.cidrawing.board.ElementManager;
+import com.mocircle.cidrawing.board.Layer;
+import com.mocircle.cidrawing.board.Selection;
 import com.mocircle.cidrawing.element.DrawElement;
 import com.mocircle.cidrawing.element.VirtualElement;
 
