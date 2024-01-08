@@ -207,7 +207,7 @@ public abstract class DrawElement extends BaseElement implements Selectable, Mov
     /**
      * Return the actual bounding box of the graphics without transformation
      *
-     * @return
+     * @return RectF
      */
     public RectF getOuterBoundingBox() {
         if (boundingBox != null) {
@@ -404,8 +404,9 @@ public abstract class DrawElement extends BaseElement implements Selectable, Mov
             // Quick check if path is rectangle
             return box.contains(getOuterBoundingBox());
         } else {
-            path.transform(getInvertedDisplayMatrix());
-            Region r1 = ShapeUtils.createRegionFromPath(path);
+            Path drawPathClone = new Path(path);
+            drawPathClone.transform(getInvertedDisplayMatrix());
+            Region r1 = ShapeUtils.createRegionFromPath(drawPathClone);
             Region r2 = ShapeUtils.createRegionFromPath(getTouchableArea());
             if (r1.quickReject(r2)) {
                 // Quick check for not intersect case

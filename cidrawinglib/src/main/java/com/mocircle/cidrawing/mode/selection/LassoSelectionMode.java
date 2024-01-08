@@ -30,6 +30,7 @@ public class LassoSelectionMode extends SelectionMode {
         }
     }
 
+    @Override
     protected DrawElement createSelectionElement() {
         StrokeElement element = new StrokeElement();
         element.setCloseStroke(true);
