@@ -6,7 +6,6 @@ import android.view.MotionEvent;
 
 import com.mocircle.android.logging.CircleLog;
 import com.mocircle.cidrawing.element.behavior.Selectable;
-import com.mocircle.cidrawing.mode.transformation.parent.DataTransformMode;
 
 public class SkewMode extends DataTransformMode {
 

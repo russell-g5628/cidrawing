@@ -5,7 +5,6 @@ import android.view.MotionEvent;
 
 import com.mocircle.android.logging.CircleLog;
 import com.mocircle.cidrawing.element.behavior.Selectable;
-import com.mocircle.cidrawing.mode.transformation.parent.DisplayTransformMode;
 import com.mocircle.cidrawing.utils.ShapeUtils;
 
 public class RotateMode extends DisplayTransformMode {

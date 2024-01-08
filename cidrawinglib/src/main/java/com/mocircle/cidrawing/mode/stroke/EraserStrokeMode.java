@@ -5,7 +5,6 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 
 import com.mocircle.cidrawing.core.CiPaint;
-import com.mocircle.cidrawing.mode.stroke.parent.BaseStrokeMode;
 
 public class EraserStrokeMode extends BaseStrokeMode {
 

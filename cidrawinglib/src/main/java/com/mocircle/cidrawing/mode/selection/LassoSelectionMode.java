@@ -5,7 +5,6 @@ import android.view.MotionEvent;
 
 import com.mocircle.cidrawing.element.DrawElement;
 import com.mocircle.cidrawing.element.StrokeElement;
-import com.mocircle.cidrawing.mode.selection.parent.SelectionMode;
 
 public class LassoSelectionMode extends SelectionMode {
 

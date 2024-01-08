@@ -56,12 +56,13 @@ public class LayerAdapter extends RecyclerView.Adapter<LayerAdapter.ViewHolder> 
         holder.itemView.setTag(layer);
         holder.nameText.setText(layer.getName());
         holder.visibleBox.setChecked(layer.isVisible());
-
-        holder.visibleBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            layer.setVisible(isChecked);
-            notifyDataSetChanged();
+        holder.visibleBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                layer.setVisible(isChecked);
+                notifyDataSetChanged();
+            }
         });
-
         if (layer.isSelected()) {
             holder.itemView.setBackgroundColor(Color.parseColor("#eeeeee"));
         } else {
