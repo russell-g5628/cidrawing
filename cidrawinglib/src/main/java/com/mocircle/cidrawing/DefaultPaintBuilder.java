@@ -98,5 +98,13 @@ public class DefaultPaintBuilder implements PaintBuilder {
         return paint;
     }
 
+    @Override
+    public CiPaint createReferenceObjectEraserPaint() {
+        CiPaint paint = new CiPaint();
+        paint.setColor(Color.GRAY);
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeWidth(2);
 
+        return paint;
+    }
 }

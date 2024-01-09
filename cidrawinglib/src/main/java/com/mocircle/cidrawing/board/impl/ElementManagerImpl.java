@@ -1,9 +1,12 @@
 package com.mocircle.cidrawing.board.impl;
 
+import android.util.Log;
+
 import com.mocircle.cidrawing.board.ElementManager;
 import com.mocircle.cidrawing.board.Layer;
 import com.mocircle.cidrawing.board.Selection;
 import com.mocircle.cidrawing.element.DrawElement;
+import com.mocircle.cidrawing.element.StrokeElement;
 import com.mocircle.cidrawing.element.VirtualElement;
 
 import java.util.ArrayList;
@@ -12,12 +15,12 @@ import java.util.List;
 
 public class ElementManagerImpl implements ElementManager {
 
-    private String boardId;
-    private List<Layer> layers = new ArrayList<>();
+    private final String boardId;
+    private final List<Layer> layers = new ArrayList<>();
     private Layer currentLayer;
     private int index = 1;
 
-    private List<LayerChangeListener> layerChangeListeners = new ArrayList<>();
+    private final List<LayerChangeListener> layerChangeListeners = new ArrayList<>();
 
     public ElementManagerImpl(String boardId) {
         this.boardId = boardId;
@@ -254,10 +257,20 @@ public class ElementManagerImpl implements ElementManager {
     @Override
     public DrawElement getFirstHitElement(float x, float y) {
         for (int i = getCurrentObjects().length - 1; i >= 0; i--) {
-            DrawElement element = getCurrentObjects()[i];
-            if (element.isSelectionEnabled() && element.hitTestForSelection(x, y)) {
-                return element;
+            if (getCurrentObjects()[i] instanceof StrokeElement) {
+                StrokeElement element = (StrokeElement) getCurrentObjects()[i];
+                Log.d("TEST", "getFirstHitElement: " + i + "---->" + getCurrentObjects()[i].getClass().getSimpleName());
+
+                if (element.isSelectionEnabled() && element.hitTestForSelection(x, y)) {
+                    return element;
+                }
+            } else {
+                DrawElement element = getCurrentObjects()[i];
+                if (element.isSelectionEnabled() && element.hitTestForSelection(x, y)) {
+                    return element;
+                }
             }
+
         }
         return null;
     }

@@ -79,4 +79,10 @@ public interface PaintBuilder {
      */
     CiPaint createReferencePointPaint();
 
+    /**
+     * Creates a paint for object eraser adornment
+     *
+     * @return the paint object created
+     */
+    CiPaint createReferenceObjectEraserPaint();
 }

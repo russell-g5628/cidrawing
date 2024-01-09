@@ -3,9 +3,14 @@ package com.mocircle.cidrawing.element;
 import android.graphics.Matrix;
 import android.graphics.Path;
 import android.graphics.PointF;
+import android.graphics.Rect;
+import android.graphics.RectF;
+import android.graphics.Region;
 
 import com.mocircle.cidrawing.persistence.ConvertUtils;
 import com.mocircle.cidrawing.persistence.PersistenceException;
+import com.mocircle.cidrawing.utils.DrawUtils;
+import com.mocircle.cidrawing.utils.ShapeUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -140,6 +145,58 @@ public class StrokeElement extends BasePathElement {
         matrix.mapPoints(newPoints);
         for (int j = 0; j < newPoints.length; j += 2) {
             points.get(j / 2).set(newPoints[j], newPoints[j + 1]);
+        }
+    }
+
+    @Override
+    public boolean hitTestForSelection(float x, float y) {
+        if (!isSelectionEnabled()) {
+            return false;
+        }
+
+        if (getBoundingBox() != null) {
+            float[] movePoint = new float[2];
+            getInvertedDisplayMatrix().mapPoints(movePoint, new float[]{x, y});
+
+            Path path = getTouchableArea();
+            RectF box = new RectF();
+            if (path.isRect(box)) {
+                // Quick check if path is rectangle
+                return box.contains(movePoint[0], movePoint[1]);
+            } else {
+                Rect touchSquare = DrawUtils.createTouchSquare(drawingView.getContext(), (int) movePoint[0], (int) movePoint[1]);
+
+                for (PointF p : points) {
+                    if (touchSquare.contains((int) p.x, (int) p.y)) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean hitTestForSelection(Path path) {
+        if (!isSelectionEnabled()) {
+            return false;
+        }
+
+        RectF box = new RectF();
+        if (path.isRect(box)) {
+            // Quick check if path is rectangle
+            return box.contains(getOuterBoundingBox());
+        } else {
+            Path drawPathClone = new Path(path);
+            drawPathClone.transform(getInvertedDisplayMatrix());
+            Region r1 = ShapeUtils.createRegionFromPath(drawPathClone);
+            Region r2 = ShapeUtils.createRegionFromPath(getTouchableArea());
+            if (r1.quickReject(r2)) {
+                // Quick check for not intersect case
+                return false;
+            }
+            return r2.op(r1, Region.Op.INTERSECT);
         }
     }
 }
